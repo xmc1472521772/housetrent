@@ -78,16 +78,28 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 【SQL日志实现】控制台打印SQL
 
+# 自定义文件存储配置
+file:
+  storage:
+    upload-dir: /app/uploads  # Docker环境路径，本地开发可改为 ${user.home}/uploads
+    max-file-size-in-bytes: 10485760  # 10MB
+
 # ================== 日志配置 ==================
-debug: true
+# 日志配置
 logging:
   level:
-    com.zpark.mapper: debug          # 【指定包下SQL日志级别】
-    # 只打印 ERROR 级别的 SQL 报错（如字段缺失、语法错误）
-    org.springframework.jdbc: ERROR
-    org.mybatis: ERROR
-    java.sql: ERROR
+    root: INFO
     org.springframework: DEBUG
+    com.zpark: DEBUG
+    org.hibernate: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 调试模式
+debug: true
 
 # ================== WebSocket 配置 ==================
 app:
