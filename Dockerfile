@@ -4,17 +4,16 @@ FROM maven:3.8.6-openjdk-18-slim AS build
 # 设置工作目录
 WORKDIR /app
 
-# 复制pom.xml文件（用于依赖缓存）
-COPY pom.xml .
-COPY */pom.xml ./*/
-
-# 下载依赖（利用Docker缓存层）
-RUN mvn dependency:go-offline -B
-
-# 复制源代码
+# 复制所有文件到容器中
 COPY . .
 
-# 构建项目（跳过测试以加快构建速度）
+# 调试：查看文件结构
+RUN echo "=== 查看根目录文件 ===" && ls -la
+RUN echo "=== 查看是否存在各个模块 ===" && \
+    ls -la House-* || echo "未找到House-*模块" && \
+    find . -name "pom.xml" -type f
+
+# 下载依赖并构建项目（跳过测试以加快构建速度）
 RUN mvn clean package -DskipTests
 
 # 第二阶段：运行时镜像
