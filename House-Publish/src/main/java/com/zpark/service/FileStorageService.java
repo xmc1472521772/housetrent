@@ -29,20 +29,32 @@ public class FileStorageService {
 
     private final Path fileStorageLocation;  // 文件存储位置路径
 
-    @Autowired
-    private FileStorageProperties fileStorageProperties;
+    @Value("${spring.servlet.multipart.max-file-size:10MB}")
+    private String maxSize;
 
+    // 修改构造函数，添加更好的错误处理和默认值
     @Autowired
-    public FileStorageService(FileStorageProperties fileStorageProperties) throws FileStorageException {
+    public FileStorageService(@Autowired(required = false) FileStorageProperties fileStorageProperties) throws FileStorageException {
+        // 如果 FileStorageProperties 为空，使用默认配置
+        String uploadDir;
+        if (fileStorageProperties != null && fileStorageProperties.getUploadDir() != null) {
+            uploadDir = fileStorageProperties.getUploadDir();
+        } else {
+            // 使用默认上传目录
+            uploadDir = System.getProperty("user.home") + "/uploads";
+        }
+
         // 初始化文件存储位置
-        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
+        this.fileStorageLocation = Paths.get(uploadDir)
                 .toAbsolutePath().normalize();
 
         try {
             // 创建存储目录(如果不存在)
             Files.createDirectories(this.fileStorageLocation);
+            System.out.println("文件存储目录创建成功: " + this.fileStorageLocation.toString());
         } catch (Exception ex) {
-            throw new FileStorageException("无法创建文件存储目录", ex);
+            System.err.println("无法创建文件存储目录: " + this.fileStorageLocation.toString());
+            throw new FileStorageException("无法创建文件存储目录: " + this.fileStorageLocation.toString(), ex);
         }
     }
 
@@ -81,7 +93,6 @@ public class FileStorageService {
      */
     @Async
     public CompletableFuture<String> storeFileAsync(MultipartFile file) {
-
         return CompletableFuture.supplyAsync(() -> storeFile(file));
     }
 
@@ -140,20 +151,16 @@ public class FileStorageService {
      * 验证文件是否合法
      * @param file 要验证的文件
      */
-
-    @Value("${spring.servlet.multipart.max-file-size}")
-    String maxSize;
     private void validateFile(MultipartFile file) {
-
-
         // 检查文件是否为空
         if (file.isEmpty()) {
             throw new InvalidFileException("文件为空");
         }
 
-        // 检查文件大小
-        if (file.getSize() > fileStorageProperties.getMaxFileSizeInBytes()) {
-            throw new InvalidFileException("文件大小超过限制");
+        // 检查文件大小 (默认10MB)
+        long maxSizeBytes = parseSize(maxSize);
+        if (file.getSize() > maxSizeBytes) {
+            throw new InvalidFileException("文件大小超过限制: " + maxSize);
         }
 
         // 检查文件类型
@@ -173,6 +180,37 @@ public class FileStorageService {
             }
         } catch (IOException e) {
             throw new InvalidFileException("无法验证文件内容", e);
+        }
+    }
+
+    /**
+     * 解析文件大小字符串为字节数
+     * @param sizeStr 大小字符串 (如 "10MB", "5GB")
+     * @return 字节数
+     */
+    private long parseSize(String sizeStr) {
+        if (sizeStr == null || sizeStr.isEmpty()) {
+            return 10 * 1024 * 1024; // 默认10MB
+        }
+        
+        sizeStr = sizeStr.toUpperCase().trim();
+        long multiplier = 1;
+        
+        if (sizeStr.endsWith("KB")) {
+            multiplier = 1024;
+            sizeStr = sizeStr.substring(0, sizeStr.length() - 2);
+        } else if (sizeStr.endsWith("MB")) {
+            multiplier = 1024 * 1024;
+            sizeStr = sizeStr.substring(0, sizeStr.length() - 2);
+        } else if (sizeStr.endsWith("GB")) {
+            multiplier = 1024 * 1024 * 1024;
+            sizeStr = sizeStr.substring(0, sizeStr.length() - 2);
+        }
+        
+        try {
+            return Long.parseLong(sizeStr.trim()) * multiplier;
+        } catch (NumberFormatException e) {
+            return 10 * 1024 * 1024; // 解析失败时返回默认值10MB
         }
     }
 
