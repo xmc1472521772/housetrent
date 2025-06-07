@@ -107,7 +107,9 @@ api:
 
 # ================== 文件上传相关配置 ==================
 file:
-  upload-dir: D:\aaaimage            # 【文件上传目录】
+  upload-dir: /app/uploads
+  storage:
+    location: /app/uploads          # 【文件上传目录】
   max-file-size: 209715200           # 【最大文件大小（字节，200MB）】
   allowed-types:                     # 【允许的文件类型】
     - image/jpeg
