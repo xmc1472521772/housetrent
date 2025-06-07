@@ -1,5 +1,5 @@
 # 多阶段构建：第一阶段用于构建项目
-FROM maven:3.8.3-openjdk-18-slim AS build
+FROM maven:3.8.6-openjdk-18-slim AS build
 
 # 设置工作目录
 WORKDIR /app
