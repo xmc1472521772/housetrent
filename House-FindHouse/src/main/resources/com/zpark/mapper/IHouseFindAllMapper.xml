@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zpark.mapper.IHouseFindAllMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zpark.entity.House">
+        <id column="house_id" property="houseId" />
+        <result column="owner_id" property="ownerId" />
+        <result column="address" property="address" />
+        <result column="area" property="area" />
+        <result column="room_number" property="roomNumber" />
+        <result column="room_type" property="roomType" />
+        <result column="rent" property="rent" />
+        <result column="latitude" property="latitude" />
+        <result column="longitude" property="longitude" />
+        <result column="status" property="status" />
+
+    </resultMap>
+
+</mapper>

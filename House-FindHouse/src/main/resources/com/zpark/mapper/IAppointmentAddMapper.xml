@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zpark.mapper.IAppointmentAddMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zpark.entity.Appointment">
+        <id column="appointment_id" property="appointmentId" />
+        <result column="tenant_id" property="tenantId" />
+        <result column="house_id" property="houseId" />
+        <result column="date" property="date" />
+        <result column="status" property="status" />
+        <result column="message" property="message" />
+        <result column="create_time" property="createTime" />
+        <result column="owner_id" property="ownerId" />
+        <result column="phone" property="phone" />
+        <result column="name" property="name" />
+    </resultMap>
+
+</mapper>

@@ -1,0 +1,13 @@
+server:
+  port: ${PORT:8080}  # Railway 会自动分配端口
+
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:h2:mem:testdb}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false  # 生产环境关闭

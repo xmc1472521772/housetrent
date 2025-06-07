@@ -1,0 +1,98 @@
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  global-config:
+    db-config:
+      id-type: assign_id
+
+spring:
+  datasource:
+    username: root
+    password: lhj445
+    url: jdbc:mysql://107.173.181.247/springboot?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      auto-commit: true
+      pool-name: HikariPool
+      connection-init-sql: SELECT 1
+
+  data:
+    redis:
+      # 连接地址
+      host: 107.173.181.247
+      # 端口
+      port: 6379
+      # 数据库
+      database: 0
+      # 用户名，如果有
+      # username:
+      # 密码，如果有
+      password: lhj445
+      # 连接超时
+      connect-timeout: 5s
+      # 读超时
+      timeout: 5s
+
+      # Lettuce 客户端的配置
+      lettuce:
+        # 连接池配置
+        pool:
+          # 最小空闲连接
+          min-idle: 0
+          # 最大空闲连接
+          max-idle: 8
+          # 最大活跃连接
+          max-active: 8
+          # 从连接池获取连接 最大超时时间，小于等于0则表示不会超时
+          max-wait: -1ms
+    mongodb:
+      uri: "mongodb://fufuking:lhj445@107.173.181.247:27017/chat_db?authSource=admin&ssl=false&connectTimeoutMS=5000&socketTimeoutMS=30000&serverSelectionTimeoutMS=5000"
+      auto-index-creation: true
+    # RabbitMQ配置 (必须添加spring-boot-starter-amqp依赖)
+    rabbitmq:
+      host: 107.173.181.247
+      port: 5672
+      username: fufuking
+      password: lhj445
+      template:
+        retry:
+          enabled: true
+          initial-interval: 1000ms
+          max-attempts: 3
+
+
+
+    # WebSocket配置 (自动生效，无需额外属性)
+    # 注意：STOMP代理配置在代码中通过MessageBrokerRegistry设置
+
+logging:
+  level:
+    com.example.demo1.mapper: debug
+
+mybatis:
+  type-aliases-package: com.example.demo1.**.entity
+  mapper-locations: classpath:mapper/*.xml
+  #用于mybatis在控制台打印sql日志
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+server:
+  port: 8080
+
+
+app:
+  stomp:
+    endpoint: /ws
+    allowed-origins: "*"
+    broker-prefix: /topic,/queue
+    app-prefix: /app
+
+jwt:
+  secret-key: "831d758dd71e3654d381061b4d8e79a34555484d481213bc76ec2cb4db5f2545"
+
+
+

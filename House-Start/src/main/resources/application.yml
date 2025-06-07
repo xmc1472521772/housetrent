@@ -1,0 +1,141 @@
+# ================== 服务端口 ==================
+server:
+  port: 8080  # 【服务端口】应用启动端口
+
+# ================== Spring Boot 主配置 ==================
+spring:
+  # ---------- 数据库配置 ----------
+  datasource:
+    username: root  # 【数据库用户名】
+    password: lhj445  # 【数据库密码】
+    url: jdbc:mysql://107.173.181.247/springboot?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true  # 【数据库连接URL】
+    driver-class-name: com.mysql.cj.jdbc.Driver  # 【JDBC驱动类名】
+    hikari:
+      connection-timeout: 30000      # 【连接超时时间】单位毫秒
+      minimum-idle: 5                # 【最小空闲连接数】
+      maximum-pool-size: 20          # 【最大连接池数量】
+      idle-timeout: 600000           # 【空闲超时时间】单位毫秒
+      max-lifetime: 1800000          # 【连接最大存活时间】单位毫秒
+      auto-commit: true              # 【是否自动提交】
+      pool-name: HikariPool          # 【连接池名称】
+      connection-init-sql: SELECT 1  # 【初始化SQL】
+
+  # ---------- Redis 配置 ----------
+  data:
+    redis:
+      host: 107.173.181.247          # 【Redis服务器地址】
+      port: 6379                     # 【Redis端口】
+      database: 0                    # 【Redis数据库编号】
+      password: lhj445               # 【Redis密码】
+      connect-timeout: 5s            # 【连接超时】
+      timeout: 5s                    # 【读超时】
+      lettuce:
+        pool:
+          min-idle: 0                # 【最小空闲连接数】
+          max-idle: 8                # 【最大空闲连接数】
+          max-active: 8              # 【最大活跃连接数】
+          max-wait: -1ms             # 【获取连接最大等待时间】
+
+    # ---------- MongoDB 配置 ----------
+    mongodb:
+      uri: "mongodb://fufuking:lhj445@107.173.181.247:27017/chat_db?authSource=admin&ssl=false&connectTimeoutMS=5000&socketTimeoutMS=30000&serverSelectionTimeoutMS=5000"  # 【MongoDB连接URI】
+      auto-index-creation: true      # 【是否自动创建索引】
+
+    # ---------- RabbitMQ 配置 ----------
+    rabbitmq:
+      host: 107.173.181.247          # 【RabbitMQ服务器地址】
+      port: 5672                     # 【RabbitMQ端口】
+      username: fufuking             # 【RabbitMQ用户名】
+      password: lhj445               # 【RabbitMQ密码】
+      template:
+        retry:
+          enabled: true              # 【是否启用重试】
+          initial-interval: 1000ms   # 【重试初始间隔】
+          max-attempts: 3            # 【最大重试次数】
+
+  # ---------- 文件上传配置 ----------
+  servlet:
+    multipart:
+      max-file-size: 150MB           # 【单个文件最大上传大小】
+      max-request-size: 200MB        # 【单次请求最大上传总大小】
+
+  # ---------- Spring MVC 配置 ----------
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher  # 【路径匹配策略】兼容老版Springfox/Knife4j
+
+  # ---------- 静态资源配置 ----------
+  web:
+    resources:
+      add-mappings: true             # 【是否启用静态资源映射】
+
+# ================== MyBatis-Plus 配置 ==================
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml  # 【Mapper XML文件位置】
+  global-config:
+    db-config:
+      id-type: assign_id             # 【主键生成策略】assign_id为雪花算法
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 【SQL日志实现】控制台打印SQL
+
+# ================== 日志配置 ==================
+logging:
+  level:
+    com.zpark.mapper: debug          # 【指定包下SQL日志级别】
+    # 只打印 ERROR 级别的 SQL 报错（如字段缺失、语法错误）
+    org.springframework.jdbc: ERROR
+    org.mybatis: ERROR
+    java.sql: ERROR
+
+# ================== WebSocket 配置 ==================
+app:
+  stomp:
+    endpoint: /ws                    # 【WebSocket端点路径】
+    allowed-origins: "*"             # 【允许的跨域源】*为全部
+    broker-prefix: /topic,/queue     # 【消息代理前缀】
+    app-prefix: /app                 # 【应用消息前缀】
+
+# ================== JWT 配置 ==================
+jwt:
+  secret-key: "831d758dd71e3654d381061b4d8e79a34555484d481213bc76ec2cb4db5f2545"  # 【JWT密钥】
+
+# ================== AI/大模型 API 配置 ==================
+api:
+  endpoint: "https://spark-api-open.xf-yun.com/v2/chat/completions"  # 【讯飞星火API地址】
+  api-key: "f6782af424f17761e469854f9444e5c7"                        # 【API Key】
+  api-secret: "MTMzOWQyZWI5YTg2MTk5M2I5ZmRjNDM1"                     # 【API Secret】
+
+# ================== 文件上传相关配置 ==================
+file:
+  upload-dir: D:\aaaimage            # 【文件上传目录】
+  max-file-size: 209715200           # 【最大文件大小（字节，200MB）】
+  allowed-types:                     # 【允许的文件类型】
+    - image/jpeg
+    - image/png
+    - image/gif
+    - video/mp4
+    - video/quicktime
+
+# ================== 支付宝支付相关配置 ==================
+# 支付宝配置
+alipay:
+  # 应用ID
+  appid: "2021000148694621"
+  # 私钥
+  rsa_private_key: "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDej9sS6XgYnC99/dCinDSMY8gsxt9fIhoH/yVAMcmhCvcrfCfZ0lLOM3gc0YBNYrN00nXfXeQrEJD88N+mECo+wgCEgvoqoVnuaNq+qAH8ONP7BETi4arBkqSviBRV4NoR7phn3VpJDsTQYbRx/3Vck28U8p7auRy21+pOKEwKVq7M+1vnpPQ2CzAbThcSkH5a2wBsLeVYQyWAU1+Ie51nFjZMbvFnW7OSl/Z6xwmZvTRKwQSDMe3PpHU/mWHmgOnRkMT8evbzpnavVrNr0DHL9f6luScQg7nJi3sG4e1kOmST07QhWRgW2rGHjIpUpmG+SV0rhQI70XA6a9Na+AC9AgMBAAECggEBAM0tjeeXePInOtlKHwdqPj+W1boB9Xd8tsbcf3j47UscEtXx9cMn1NLoPDlFIqU08wAl7ijoJCtXcHLflS9BA9ErhNKk9QBME95oqBDQTlQ6B6MIQoFvTb569HwmVaj+S8vwTGykclGb3fHFwVa/DXE1Mlj7e1tlAIXH8+ft2nxDyO9CVK/DzutFnAA15RqON4YG7qitfvRcyNE2PV6nWWEkNMeKUevVjQ8mjo27zsZBM9kALJnk0IUX6C+rPplE+ndJrN+YGP9y2kyJIM1XiJYSZTlf1H2i9aQPJT/zBHZyaNatrP4FZ4DYnAWLLn6C+AZX2tioNW0e5e8TYh/bGnkCgYEA+nx/1+HVWv9QP+MysHcW5YmwIQhyepDk4T+S1HBtVuB04wkHffTLu3UVdqNIDl6Pd8UpuellU/uB/8ikKqtiluhu11zE3SlatjlL1h6YE4N5Lm4arlGewE/j8dwnd0JpSRGk/3U997cvJXJFpzhcEsD1+CWhs9CZiSh74JUAv08CgYEA43YAVWWPVcMlpldNJdhH65fLaCHpXcV2biiJXV8RO54ODQEFMZwsZHby+LNx4MHYAo+f3FDlt4o4US32c60IH1Fqp2ixLLcaLaErqayavhFS/uUIVUhzl2xdCGDemBdDO9vYxx0Xkbu51MiP/qc8slHXJd7RIxez62IzQ1d23DMCgYEAyrAJpv/X7D1ii3/mGYMUJQMoYWJ7eBBdFKOjxYGACGeyTbCVvmdioDqa9pgji3Ua9Ji3LffdhXqj8/1AUkLCkUhdwKkRp8B55bAxXH7/IfMmENsJffsP0aAT3DcAPHGhzn2XnRsa3KL/ZHa2RBzH7Gj14ClbUqy+QI1gyBbqNuMCgYEA4jRcupBojjqnO5iAcY14YLQxphprcUTJtV181i2P/sD9ajNEjgSpJTQiB/C05HcCMfHRYhHVkcTUou7ZtEo01KhsL5Zu9HAXiZ9Jw9CSh0jFSBZPRjjqM4Ght45Wb9xakbHeEI4+/UA624ClqvN36kJ3ewLu6z5MQF8FaggWfX8CgYB0nEwqAoMjuf6Doqtd6qH9gapx0cOJqB/6a8w9uW9XpJmZUbuw/jaWCRW2Z0bEdc3d9BernXuu30rutTVuGUEySYY+z61v86Dds9ydxpeaWJLKxpmvtc/IfxXzz+KLHwVaReWQhg6lspAaWBx6/1PgR0mFlkW2seAL67o0EJsGaA=="
+  # 支付宝请求网关url  固定
+  url: "https://openapi-sandbox.dl.alipaydev.com/gateway.do"
+  # 异步通知地址url
+  notify_url: "https://359324c6.r5.cpolar.top/alipay/callback/pay_notify"
+  # 同步通知地址url
+  return_url: "https://359324c6.r5.cpolar.top/alipay/callback/pay_sync"
+  # 编码格式
+  charset: "utf-8"
+  # 返回数据格式
+  format: "json"
+  # 沙箱支付宝公钥
+  zhifu_public_key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiCFDJ78+NkoDwzJ67DSEqaxw20g/onZ7J7vBCZNd6ni9Xe868dJkECeGsvwQX/wSojPhdbPNwTAOdfF+n7rQ+II0Zkv8xUR7Yvc1YBRr4E0Y0mslumGQQL8u3tO++/XERniIJE3pC78kZ6lZmcJPgeH10+dbSVTbvIsr1EIM7Gy6VhqK0tN1/wGNtdlYmrx3n+N10raePW3Gca1YZyeo+JkCJjDFsCFQluJzrxd+jlhqCOe3TVo5l5xnarsalhsNFTsVBkh+12ixGC+rsE+NfbIGEAHbr4gCJw6yrV3bVdYZzMfWH4m9xDIZ9aeF1Uig8HE8zjDg7wPa9Dy0RXE7xQIDAQAB"
+  # 沙箱应用公钥
+  alipay_public_key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3o/bEul4GJwvff3Qopw0jGPILMbfXyIaB/8lQDHJoQr3K3wn2dJSzjN4HNGATWKzdNJ1313kKxCQ/PDfphAqPsIAhIL6KqFZ7mjavqgB/DjT+wRE4uGqwZKkr4gUVeDaEe6YZ91aSQ7E0GG0cf91XJNvFPKe2rkcttfqTihMClauzPtb56T0NgswG04XEpB+WtsAbC3lWEMlgFNfiHudZxY2TG7xZ1uzkpf2escJmb00SsEEgzHtz6R1P5lh5oDp0ZDE/Hr286Z2r1aza9Axy/X+pbknEIO5yYt7BuHtZDpkk9O0IVkYFtqxh4yKVKZhvkldK4UCO9FwOmvTWvgAvQIDAQAB"
+  # 签名类型
+  signtype: "RSA2"

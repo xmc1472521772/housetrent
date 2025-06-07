@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zpark.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zpark.entity.User">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="email" property="email" />
+        <result column="role" property="role" />
+    </resultMap>
+
+    <select id="selectuser" parameterType="com.zpark.entity.User" resultType="integer">
+        select(select count(*) username from user where username = #{username} limit 1) +
+        (select count(*) email from user where email = #{email} limit 1)
+    </select>
+
+    <select id="login" resultType="com.zpark.entity.User" parameterType="com.zpark.entity.User">
+        select username, password from user where username = #{username} and password = #{password}
+    </select>
+
+    <insert id="register" parameterType="com.zpark.entity.User" useGeneratedKeys="true" keyProperty="id">
+        insert into user(id,username,password,email,role)values (#{id},#{username},#{password},#{email},#{role})
+    </insert>
+
+    <select id="selectId" resultType="long" parameterType="com.zpark.entity.User">
+        select id from user where username = #{username} limit 1
+    </select>
+
+
+
+<!--//有问题这里，报错了这里，nnd，写错了，服了注释我知道了，-->
+<!--没问题没我呢提应该现在-->
+</mapper>
