@@ -79,6 +79,7 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 【SQL日志实现】控制台打印SQL
 
 # ================== 日志配置 ==================
+debug: true
 logging:
   level:
     com.zpark.mapper: debug          # 【指定包下SQL日志级别】
@@ -86,6 +87,7 @@ logging:
     org.springframework.jdbc: ERROR
     org.mybatis: ERROR
     java.sql: ERROR
+    org.springframework: DEBUG
 
 # ================== WebSocket 配置 ==================
 app:
